@@ -19,12 +19,14 @@ void seterrobj(struct lua_State* L, int error) {
     lua_pushinteger(L, error);
 }
 
+// 检查是否超出堆栈
 void luaD_checkstack(struct lua_State* L, int need) {
     if (L->top + need > L->stack_last) {
         luaD_growstack(L, need);
     }
 }
 
+// 扩容堆栈
 void luaD_growstack(struct lua_State* L, int size) {
     if (L->stack_size > LUA_MAXSTACK) {
         luaD_throw(L, LUA_ERRERR);
@@ -74,6 +76,7 @@ void luaD_throw(struct lua_State* L, int error) {
     }
 }
 
+// 运行在保护环境下，基于setjmp来实现
 int luaD_rawrunprotected(struct lua_State* L, Pfunc f, void* ud) {
     int old_ncalls = L->ncalls;
     struct lua_longjmp lj;
