@@ -1,6 +1,7 @@
 #include "lstate.h"
 #include "llimits.h"
 #include "lmem.h"
+#include "lgc.h"
 
 typedef struct LX {
     // 不清楚这个extra的作用
@@ -54,6 +55,22 @@ lua_State* lua_newstate(lua_Alloc alloc, void* ud) {
     G(L) = g;
     g->mainthread = L;
 
+    // gc init
+    g->gcstate = GCSpause;
+    g->currentwhite = bitmask(WHITE0BIT);
+    g->totalbytes = sizeof(LG);
+    g->allgc = NULL;
+    g->sweepgc = NULL;
+    g->gray = NULL;
+    g->grayagain = NULL;
+    g->GCdebt = 0;
+    g->GCmemtrav = 0;
+    g->GCestimate = 0;
+    g->GCstepmul = LUA_GCSTEPMUL;
+
+    L->marked = luaC_white(g);
+    L->gclist = NULL;
+
     stack_init(L);
 
     return L;
@@ -63,7 +80,7 @@ lua_State* lua_newstate(lua_Alloc alloc, void* ud) {
 
 static void free_stack(struct lua_State* L) {
     global_State* g = G(L);
-    (*g->frealloc)(g->ud, L->stack, sizeof(TValue), 0);
+    luaM_free(L, L->stack, sizeof(TValue));
     L->stack = L->stack_last = L->top = NULL;
     L->stack_size = 0;
 }
@@ -71,14 +88,15 @@ static void free_stack(struct lua_State* L) {
 void lua_close(struct lua_State* L) {
     struct global_State* g = G(L);
     struct lua_State* L1 = g->mainthread; // only mainthread can be close
+
+    luaC_freeallobjects(L);
     
-    // because I have not implement gc, so we should free ci manual 
     struct CallInfo* ci = &L1->base_ci;
     while(ci->next) {
         struct CallInfo* next = ci->next->next;
         struct CallInfo* free_ci = ci->next;
 
-        (*g->frealloc)(g->ud, free_ci, sizeof(struct CallInfo), 0);
+        luaM_free(L, free_ci, sizeof(struct CallInfo));
         ci = next;
     }
 

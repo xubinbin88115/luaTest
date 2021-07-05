@@ -1,9 +1,19 @@
 #ifndef _LOBJECT_H_ 
 #define _LOBJECT_H_
 
+#include "llimits.h"
 #include "lua.h"
 
+// luaobject.h
+#define CommonHeader struct GCObject* next; lu_byte tt_; lu_byte marked
+#define LUA_GCSTEPMUL 200
+
+struct GCObject {
+    CommonHeader;
+};
+
 typedef union lua_Value {
+    struct GCObject* gc;
     void* p;
     int b;
     lua_Integer i;
@@ -15,6 +25,11 @@ typedef struct lua_TValue {
     Value value_;
     int tt_;
 } TValue;
+
+typedef struct TString {
+    int test_field1;
+    int test_field2;
+} TString;
 
 typedef TValue *StkId;
 

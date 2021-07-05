@@ -95,9 +95,9 @@ void test4()
     printf("test4 stacksize = %d\n", luaL_stacksize(L));
     luaL_pushcfunction(L, &test4_state);
     luaL_pushinteger(L, 999);
-    printf("test4 stacksize = %d\n", luaL_stacksize(L));
+    printf("test4 stacksize = %d, %d\n", luaL_stacksize(L), lua_gettop(L));
     luaL_pcall(L, 1, 3);
-    printf("test4 stacksize = %d\n", luaL_stacksize(L));
+    printf("test4 stacksize = %d, %d\n", luaL_stacksize(L), lua_gettop(L));
 
     lua_Integer a = luaL_tointeger(L, -3);
     printf("test4 integer ret1 = %d\n", a);
