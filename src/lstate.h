@@ -30,10 +30,10 @@ typedef struct lua_State {
     int stack_size;
     struct lua_longjmp* errorjmp;
     int status;
-    struct lua_State* next;
     struct lua_State* previous;
     struct CallInfo base_ci;
     struct CallInfo* ci;
+    int nci;
     struct global_State* l_G;
     ptrdiff_t errorfunc;
     int ncalls;

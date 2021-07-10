@@ -85,6 +85,8 @@ void test3()
 static int test4_state(struct lua_State* L)
 {
     luaL_pushinteger(L, 111);
+    luaL_pushinteger(L, 222);
+    luaL_pushinteger(L, 333);
     return 1;
 }
 
