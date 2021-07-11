@@ -184,7 +184,6 @@ static void setpause(struct lua_State* L)
 static l_mem get_debt(struct lua_State* L) 
 {
     struct global_State* g = G(L);
-    int stepmul = g->GCstepmul; 
     l_mem debt = g->GCdebt;
     if (debt <= 0) {
         return 0;

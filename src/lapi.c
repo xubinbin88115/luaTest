@@ -108,3 +108,8 @@ void lua_settop(struct lua_State* L, int idx) {
 void lua_pop(struct lua_State* L) {
     lua_settop(L, -1);
 }
+
+TValue* luaL_index2addr(struct lua_State* L, int idx)
+{
+    return index2addr(L, idx);
+}

@@ -32,8 +32,14 @@ all: test
 test: $(OBJECTS) test.o
 	gcc -g -o $(OUTPUT)/test $(OUTPUT)/test.o $(OUTPUT)/lapi.o $(OUTPUT)/lauxlib.o $(OUTPUT)/ldo.o $(OUTPUT)/lmem.o $(OUTPUT)/lobject.o $(OUTPUT)/lgc.o $(OUTPUT)/lstate.o $(OUTPUT)/lua.o
 
+test2: $(OBJECTS) test2.o
+	gcc -g -o $(OUTPUT)/test2 $(OUTPUT)/test2.o $(OUTPUT)/lapi.o $(OUTPUT)/lauxlib.o $(OUTPUT)/ldo.o $(OUTPUT)/lmem.o $(OUTPUT)/lobject.o $(OUTPUT)/lgc.o $(OUTPUT)/lstate.o $(OUTPUT)/lua.o
+
 test.o: $(TEST)/test.c
 	gcc -c -g $(TEST)/test.c -o $(OUTPUT)/test.o
+
+test2.o: $(TEST)/test2.c
+	gcc -c -g $(TEST)/test2.c -o $(OUTPUT)/test2.o
 
 clean:
 	rm -rf $(OUTPUT)/*
