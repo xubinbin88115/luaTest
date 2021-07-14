@@ -8,6 +8,8 @@
 #define CommonHeader struct GCObject* next; lu_byte tt_; lu_byte marked
 #define LUA_GCSTEPMUL 200
 
+#define MAXSHORTSTR 40
+
 struct GCObject {
     CommonHeader;
 };
@@ -27,8 +29,20 @@ typedef struct lua_TValue {
 } TValue;
 
 typedef struct TString {
-    int test_field1;
-    int test_field2;
+    CommonHeader;
+    unsigned int hash;          // string hash value
+
+    // if TString is long string type, then extra = 1 means it has been hash,
+    // extra = 0 means it has not hash yet. if TString is short string type,
+    // then extra = 0 means it can be reclaim by gc, or if extra is not 0,
+    // gc can not reclaim it.
+    unsigned short extra;
+    unsigned short shrlen;
+    union {
+        struct TString* hnext; // only for short string, if two different string encounter hash collision, then chain them
+        size_t lnglen;
+    } u;
+    char data[0];
 } TString;
 
 typedef TValue *StkId;

@@ -11,6 +11,10 @@
 #define GCSTEPSIZE 1024  //1kb
 #define GCPAUSE 100
 
+// size for string cache
+#define STRCACHE_M 53
+#define STRCACHE_N 2
+
 typedef TValue* StkId;
 
 struct CallInfo {
@@ -40,11 +44,23 @@ typedef struct lua_State {
     struct GCObject* gclist;
 } lua_State;
 
+// only for short string
+struct stringtable {
+    struct TString** hash;
+    unsigned int nuse;
+    unsigned int size;
+};
+
 typedef struct global_State {
     struct lua_State* mainthread;
     lua_Alloc frealloc;
     void* ud; 
     lua_CFunction panic;
+    
+    struct stringtable strt;
+    TString* strcache[STRCACHE_M][STRCACHE_N];
+    unsigned int seed;              // hash seed, just for string hash
+    TString* memerrmsg;
 
     //gc fields
     lu_byte gcstate;
@@ -53,9 +69,10 @@ typedef struct global_State {
     struct GCObject** sweepgc;
     struct GCObject* gray;
     struct GCObject* grayagain;
+    struct GCObject* fixgc;         // objects can not collect by gc
     lu_mem totalbytes;
     l_mem GCdebt;                   // GCdebt will be negative
-    lu_mem GCmemtrav;               // per gc step traverse memory bytes 
+    lu_mem GCmemtrav;               // 每次GC操作（调用一次singlestep接口）清除的数据大小
     lu_mem GCestimate;              // after finish a gc cycle,it records total memory bytes (totalbytes + GCdebt)
     int GCstepmul;
 } global_State;
@@ -64,6 +81,7 @@ typedef struct global_State {
 union GCUnion {
     struct GCObject gc;
     lua_State th;
+    TString ts;
 };
 
 struct lua_longjmp;

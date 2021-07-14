@@ -8,6 +8,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <assert.h>
+#include <string.h>
 
 #include "luaconf.h"
 

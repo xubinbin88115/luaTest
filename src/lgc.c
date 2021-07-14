@@ -269,3 +269,14 @@ void luaC_freeallobjects(struct lua_State* L)
     g->currentwhite = WHITEBITS;
     sweepwholelist(L, &g->allgc);
 }
+
+void luaC_fix(struct lua_State* L, struct GCObject* o)
+{
+    struct global_State* g = G(L);
+    lua_assert(g->allgc == o);
+
+    g->allgc = g->allgc->next;
+    o->next = g->fixgc;
+    g->fixgc = o;
+    white2gray(o);
+}
