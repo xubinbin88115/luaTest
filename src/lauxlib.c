@@ -21,6 +21,10 @@ void luaL_pushcfunction(struct lua_State* L, lua_CFunction f) {
     lua_pushcfunction(L, f);
 }
 
+void luaL_pushstring(struct lua_State* L, const char* str) {
+    lua_pushstring(L, str);
+}
+
 void luaL_pushboolean(struct lua_State* L, bool boolean) {
     lua_pushboolean(L, boolean);
 }

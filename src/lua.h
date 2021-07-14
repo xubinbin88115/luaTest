@@ -71,6 +71,7 @@ void lua_pushnumber(struct lua_State* L, float number);
 void lua_pushboolean(struct lua_State* L, bool b);
 void lua_pushnil(struct lua_State* L);
 void lua_pushlightuserdata(struct lua_State* L, void* p);
+void lua_pushstring(struct lua_State* L, const char* str);
 
 lua_Integer lua_tointegerx(struct lua_State* L, int idx, int* isnum);
 lua_Number lua_tonumberx(struct lua_State* L, int idx, int* isnum);

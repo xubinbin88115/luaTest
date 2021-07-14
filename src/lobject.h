@@ -66,6 +66,7 @@ void setfltvalue(StkId target, float number);
 void setbvalue(StkId target, bool b);
 void setnilvalue(StkId target);
 void setpvalue(StkId target, void* p);
+void setgco(StkId target, struct GCObject* gco);
 
 void setobj(StkId target, StkId value);
 

@@ -1,5 +1,6 @@
 #include "lapi.h"
 #include "lstate.h"
+#include "lstring.h"
 
 static TValue* index2addr(struct lua_State* L, int idx) {
     if (idx >= 0) {
@@ -44,6 +45,14 @@ void lua_pushnil(struct lua_State* L) {
 
 void lua_pushlightuserdata(struct lua_State* L, void* p) {
     setpvalue(L->top, p);
+    increase_top(L);
+}
+
+void lua_pushstring(struct lua_State* L, const char* str) {
+    unsigned int l = (unsigned int)strlen(str);
+    struct TString* ts = luaS_newlstr(L, str, l);
+    struct GCObject* gco = obj2gco(ts);
+    setgco(L->top, gco);
     increase_top(L);
 }
 

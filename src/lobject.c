@@ -29,6 +29,11 @@ void setpvalue(StkId target, void* p) {
     target->tt_ = LUA_TLIGHTUSERDATA;
 }
 
+void setgco(StkId target, struct GCObject* gco) {
+    target->value_.gc = gco;
+    target->tt_ = gco->tt_;
+}
+
 void setobj(StkId target, StkId value) {
     target->value_ = value->value_;
     target->tt_ = value->tt_;
