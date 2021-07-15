@@ -21,6 +21,7 @@ lua_Integer luaL_tointeger(struct lua_State* L, int idx);
 lua_Number luaL_tonumber(struct lua_State* L, int idx);
 void* luaL_touserdata(struct lua_State* L, int idx);
 bool luaL_toboolean(struct lua_State* L, int idx);
+char* luaL_tostring(struct lua_State* L, int index);
 int luaL_isnil(struct lua_State* L, int idx);
 
 void luaL_pop(struct lua_State* L);

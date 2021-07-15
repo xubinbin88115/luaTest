@@ -28,7 +28,9 @@
 
 #define cast(t, exp) ((t)(exp))
 #define savestack(L, o) ((o) - (L)->stack)
-#define restorestack(L, o) ((L)->stack + (o)) 
+#define restorestack(L, o) ((L)->stack + (o))
+#define point2uint(p) ((unsigned int)((size_t)p & UINT_MAX))
+#define novariant(o) ((o)->tt_ & 0xf)
 
 // basic object type
 #define LUA_TNUMBER 1
@@ -77,6 +79,7 @@ lua_Integer lua_tointegerx(struct lua_State* L, int idx, int* isnum);
 lua_Number lua_tonumberx(struct lua_State* L, int idx, int* isnum);
 bool lua_toboolean(struct lua_State* L, int idx);
 int lua_isnil(struct lua_State* L, int idx);
+char* lua_tostring(struct lua_State* L, int idx);
 
 void lua_settop(struct lua_State* L, int idx);
 int lua_gettop(struct lua_State* L);

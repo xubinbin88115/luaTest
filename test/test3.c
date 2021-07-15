@@ -50,13 +50,13 @@ void test_string_cache(struct lua_State* L, int is_same_str) {
         struct TString* ts = NULL;
     
         if (is_same_str) {
-            ts = luaS_new(L, g_lngstr, strlen(g_lngstr));
+            ts = luaS_new(L, g_lngstr, (unsigned int)strlen(g_lngstr));
         }
         else {
             char* buff = (char*)malloc(256);
             printf("buff addr %x \n", (unsigned int)(size_t)buff);
             sprintf(buff, "%s", g_lngstr);
-            ts = luaS_new(L, buff, strlen(buff));
+            ts = luaS_new(L, buff, (unsigned int)strlen(buff));
             free(buff);
         }
 
@@ -71,8 +71,8 @@ void test_string_cache(struct lua_State* L, int is_same_str) {
 }
 
 void test_gc(struct lua_State* L) {
-   int start_time = time(NULL);
-   int end_time = time(NULL);
+   size_t start_time = time(NULL);
+    size_t end_time = time(NULL);
    size_t max_bytes = 0;
    struct global_State* g = G(L);
    int j = 0;
@@ -91,7 +91,7 @@ void test_gc(struct lua_State* L) {
         }
    }
    end_time = time(NULL);
-   printf("finish test start_time:%d end_time:%d max_bytes:%f kb \n", start_time, end_time, (float)max_bytes / 1024.0f);
+   printf("finish test start_time:%ld end_time:%ld max_bytes:%f kb \n", start_time, end_time, (float)max_bytes / 1024.0f);
 }
          
 void test()

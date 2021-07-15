@@ -104,6 +104,10 @@ bool luaL_toboolean(struct lua_State* L, int idx) {
     return lua_toboolean(L, idx);
 }
 
+char* luaL_tostring(struct lua_State* L, int index) {
+    return lua_tostring(L, index);
+}
+
 int luaL_isnil(struct lua_State* L, int idx) {
     return lua_isnil(L, idx);
 }

@@ -95,6 +95,16 @@ int lua_isnil(struct lua_State* L, int idx) {
     return addr->tt_ == LUA_TNIL;
 }
 
+char* lua_tostring(struct lua_State* L, int idx) {
+    TValue* addr = index2addr(L, idx);
+    if (novariant(addr) != LUA_TSTRING) {
+        return NULL;
+    }
+
+    struct TString* ts = gco2ts(addr->value_.gc);
+    return getstr(ts);
+}
+
 int lua_gettop(struct lua_State* L) {
     return cast(int, L->top - (L->ci->func + 1));
 }

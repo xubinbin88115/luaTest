@@ -141,6 +141,25 @@ struct TString* luaS_newlstr(struct lua_State* L, const char* str, unsigned int 
     }
 }
 
+struct TString* luaS_new(struct lua_State* L, const char* str, unsigned int l)
+{
+    unsigned int hash = point2uint(str);
+    int i = hash % STRCACHE_M;
+    for (int j = 0; j < STRCACHE_N; j ++) {
+        struct TString* ts = G(L)->strcache[i][j];
+        if (strcmp(getstr(ts), str) == 0) {
+            return ts;
+        }
+    }
+
+    for (int j = STRCACHE_N - 1; j > 0; j--) {
+        G(L)->strcache[i][j] = G(L)->strcache[i][j - 1];
+    }
+
+    G(L)->strcache[i][0] = luaS_newlstr(L, str, l);
+    return G(L)->strcache[i][0];
+}
+
 // remove TString from stringtable, only for short string
 void luaS_remove(struct lua_State* L, struct TString* ts)
 {
