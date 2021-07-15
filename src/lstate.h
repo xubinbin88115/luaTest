@@ -58,7 +58,7 @@ typedef struct global_State {
     lua_CFunction panic;
     
     struct stringtable strt;
-    TString* strcache[STRCACHE_M][STRCACHE_N];
+    TString* strcache[STRCACHE_M][STRCACHE_N];  // 缓存所有长短字符，超出就覆盖
     unsigned int seed;              // hash seed, just for string hash
     TString* memerrmsg;
 

@@ -2,6 +2,7 @@
 #include "llimits.h"
 #include "lmem.h"
 #include "lgc.h"
+#include "lstring.h"
 
 typedef struct LX {
     // 不清楚这个extra的作用
@@ -72,6 +73,7 @@ lua_State* lua_newstate(lua_Alloc alloc, void* ud) {
     L->gclist = NULL;
 
     stack_init(L);
+    luaS_init(L);
 
     return L;
 }

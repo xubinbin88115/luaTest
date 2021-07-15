@@ -1,5 +1,6 @@
 #include "lgc.h"
 #include "lmem.h"
+#include "lstring.h"
 
 #define GCMAXSWEEPGCO 25
 
@@ -32,10 +33,16 @@ void reallymarkobject(struct lua_State* L, struct GCObject* gco)
     case LUA_TTHREAD: 
         linkgclist(gco2th(gco), g->gray);
         break;
-    case LUA_TSTRING:
-        gray2black(gco);
-        g->GCmemtrav += sizeof(struct TString);
-        break;
+    case LUA_SHRSTR:{
+            gray2black(gco);
+            struct TString* ts = gco2ts(gco);
+            g->GCmemtrav += sizelstring(ts->shrlen);
+        } break;
+    case LUA_LNGSTR: {
+            gray2black(gco);
+            struct TString* ts = gco2ts(gco);
+            g->GCmemtrav += sizelstring(ts->u.lnglen);
+        } break;
     default:
         break;
     }
@@ -99,15 +106,24 @@ static void atomic(struct lua_State* L)
     g->gcstate = GCSinsideatomic;
     propagateall(L);
     g->currentwhite = cast(lu_byte, otherwhite(g));
+    
+    luaS_clearcache(L);
 }
 
 static lu_mem freeobj(struct lua_State* L, struct GCObject* gco)
 {
     switch(gco->tt_) {
-        case LUA_TSTRING: {
-            lu_mem sz = sizeof(TString);
-            luaM_free(L, gco, sz);
+        case LUA_SHRSTR: {
+            struct TString* ts = gco2ts(gco);
+            luaS_remove(L, ts);
+            lu_mem sz = sizelstring(ts->shrlen);
+            luaM_free(L, ts, sz);
             return sz;
+        } break;
+        case LUA_LNGSTR: {
+            struct TString* ts = gco2ts(gco);
+            lu_mem sz = sizelstring(ts->u.lnglen);
+            luaM_free(L, ts, sz);
         } break;
         default:{
             lua_assert(0);
