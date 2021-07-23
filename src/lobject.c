@@ -1,5 +1,7 @@
 #include "lobject.h"
 
+const TValue luaO_nilobject_ = { {NULL}, LUA_TNIL };
+
 void setivalue(StkId target, int integer) {
     target->value_.i = integer;
     target->tt_ = LUA_NUMINT;
@@ -37,4 +39,10 @@ void setgco(StkId target, struct GCObject* gco) {
 void setobj(StkId target, StkId value) {
     target->value_ = value->value_;
     target->tt_ = value->tt_;
+}
+
+int luaO_ceillog2(int value) {
+    int x = 0;
+    for (; value > (int)pow(2, x); x ++);
+    return x;
 }

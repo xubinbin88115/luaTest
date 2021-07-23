@@ -61,6 +61,7 @@ typedef struct global_State {
     TString* strcache[STRCACHE_M][STRCACHE_N];  // 缓存所有长短字符，超出就覆盖
     unsigned int seed;              // hash seed, just for string hash
     TString* memerrmsg;
+    TValue l_registry;
 
     //gc fields
     lu_byte gcstate;
@@ -82,6 +83,7 @@ union GCUnion {
     struct GCObject gc;
     lua_State th;
     TString ts;
+    struct Table tbl;
 };
 
 struct lua_longjmp;

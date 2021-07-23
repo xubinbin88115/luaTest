@@ -2,7 +2,6 @@
 #include "lmem.h"
 
 #define MINSTRTABLESIZE 128
-#define lmod(hash, size) ((hash) & (size - 1))
 
 #define MEMERRMSG "not enough memory"
 

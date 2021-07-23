@@ -41,6 +41,7 @@
 #define obj2gco(o) (&cast(union GCUnion*, o)->gc)
 #define gco2th(o)  check_exp((o)->tt_ == LUA_TTHREAD, &cast(union GCUnion*, o)->th)
 #define gco2ts(o) check_exp((o)->tt_ == LUA_SHRSTR || (o)->tt_ == LUA_LNGSTR, &cast(union GCUnion*, o)->ts)
+#define gco2tbl(o) check_exp((o)->tt_ == LUA_TTABLE, &cast(union GCUnion*, o)->tbl)
 #define gcvalue(o) ((o)->value_.gc)
 
 #define markobject(L, o) if (iswhite(o)) { reallymarkobject(L, obj2gco(o)); }

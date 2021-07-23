@@ -110,8 +110,37 @@ void test()
     luaL_close(L);
 }
 
+static int add(lua_State* L)
+{
+    char* a = luaL_tostring(L, -1);
+    char* b = luaL_tostring(L, -2);
+    
+    char buff[255];
+    memset(buff, 0, sizeof(buff));
+    sprintf(buff, "%s", a);
+    strcat(buff, b);
+    luaL_pushstring(L, buff);
+    
+    return 1;
+}
+
+void test2()
+{
+    struct lua_State* L = luaL_newstate();
+    
+    luaL_pushcfunction(L, &add);
+    luaL_pushstring(L, "aaaa");
+    luaL_pushstring(L, "bbbb");
+    luaL_pcall(L, 2, 1);
+    
+    const char* a = luaL_tostring(L, -1);
+    printf("aaaa + bbbb = %s\n", a);
+    
+    luaL_close(L);
+}
+
 int main()
 {
-    test();
+    test2();
     return 0;
 }
